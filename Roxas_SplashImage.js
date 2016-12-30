@@ -7,12 +7,13 @@
 //  2016-12-30 - Version 1.0 - release
 //-----------------------------------------------------------------------------
 // TODO Fade In / Out effect
+// TODO create a "namespace" to prevent collision with other global stuff
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /*:
- * @plugindesc (v.1.0) A plugin to allow you to splash an image from an event.
+ * @plugindesc (v.1.0) A plugin that allows you to splash an image from an event.
  * 
  * @author Roxas
  *
@@ -30,7 +31,7 @@
  * Roxas Splash Image
  *
  * Description
- * A litte and easy to use plugin for RPG Maker MV. 
+ * A little and easy to use plugin for RPG Maker MV. 
  * It allows you to splash an image on the screen. 
  * It can be useful to show a letter, a plan or something else to the player.
  *
@@ -78,10 +79,12 @@ var SplashImage_defaultOpacity;
 
 
 
+
 // DEFINE SCRIPT CALL VARIABLES
 //-----------------------------------------------------------------------------
 var SplashImage_requestedImageName;
 var SplashImage_requestedOpacity;
+
 
 
 
@@ -122,7 +125,6 @@ Scene_SplashImage.prototype.createBackground = function() {
 }
 
 Scene_SplashImage.prototype.createSplashImage = function() {
-    //var bitmap = ImageManager.loadPicture(SplashImage_requestedImageName, null);
     var bitmap = Bitmap.load(SplashImage_folder + SplashImage_requestedImageName + ".png");
     Scene_SplashImage_Sprite = new Sprite(bitmap);
     bitmap.addLoadListener(this.addSprite);
