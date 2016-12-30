@@ -7,8 +7,6 @@
 //  2016-12-30 - Version 1.0 - release
 //-----------------------------------------------------------------------------
 // TODO Fade In / Out effect
-// TODO Directory Parameter
-// TODO Breite/Höhe selbst herausfinden
 //-----------------------------------------------------------------------------
 
 
@@ -32,9 +30,9 @@
  * Roxas Splash Image
  *
  * Description
- * An easy to use plugin for RPG Maker MV that allows you to splash an image
- * on the screen to maybe show a letter or something that the player want to see
- * in a big format in front of him.
+ * A litte and easy to use plugin for RPG Maker MV. 
+ * It allows you to splash an image on the screen. 
+ * It can be useful to show a letter, a plan or something else to the player.
  *
  * Parameters
  * folder         = the folder in which the images are located
