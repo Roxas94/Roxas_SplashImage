@@ -5,6 +5,7 @@
 //  Roxas_SplashImage.js
 //-----------------------------------------------------------------------------
 //  2016-12-30 - Version 1.0 - release
+//  2016-12-31 - Version 1.1 - bug fixed in showSplashImage(imageName, opacity)
 //-----------------------------------------------------------------------------
 // TODO Fade In / Out effect
 // TODO create a "namespace" to prevent collision with other global stuff
@@ -171,7 +172,7 @@ function showSplashImage(imageName) {
     SplashImage_requestedOpacity = null;
     SceneManager.push(Scene_SplashImage);
 }
-function showSplashImage(imageName, width, height, opacity) {
+function showSplashImage(imageName, opacity) {
     SplashImage_requestedImageName = imageName;
     SplashImage_requestedOpacity = opacity;
     SceneManager.push(Scene_SplashImage);
