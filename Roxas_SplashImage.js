@@ -153,8 +153,8 @@ Scene_SplashImage.prototype.handleUserTouchInput = function() {
 }
 
 Scene_SplashImage.prototype.free = function() {
-    this._commandWindow.close();
-    this.popScene();
+    instance._commandWindow.close();
+    instance.popScene();
 }
 
 Scene_SplashImage.prototype.update = function() {
