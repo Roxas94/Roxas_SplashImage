@@ -8,13 +8,13 @@
 //  2016-12-31 - Version 1.1 - bug fixed in showSplashImage(imageName, opacity)
 //-----------------------------------------------------------------------------
 // TODO Fade In / Out effect
-// TODO create a "namespace" to prevent collision with other global stuff
+// TODO Create a "namespace" to prevent collision with other global stuff
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /*:
- * @plugindesc (v.1.0) A plugin that allows you to splash an image from an event.
+ * @plugindesc (v.1.1) A plugin that allows you to splash an image from an event.
  * 
  * @author Roxas
  *
