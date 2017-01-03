@@ -8,7 +8,7 @@ So it should be possible to tell stories without a single character or to improv
 
 ###Screenshot
 Here is an example of how I used the plugin to show an old log of a scientist to the player.
-![Alt text](/Roxas_SplashImage_Screenshot.PNG?raw=true "Image could not be loaded")
+![Alt text](/Roxas_SplashImage_Screenshot_Log.PNG?raw=true "Image could not be loaded")
 
 ###How to install
 - Download the plugin "Roxas_SplashImage.js"
