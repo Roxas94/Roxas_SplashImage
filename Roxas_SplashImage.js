@@ -6,6 +6,8 @@
 //-----------------------------------------------------------------------------
 //  2016-12-30 - Version 1.0 - release
 //  2016-12-31 - Version 1.1 - bug fixed in showSplashImage(imageName, opacity)
+//  2022-04-29 - Version 1.2 - update plugin description
+//                             add defaultFileType plugin parameter
 //-----------------------------------------------------------------------------
 // TODO Fade In / Out effect
 // TODO Create a "namespace" to prevent collision with other global stuff
@@ -14,7 +16,7 @@
 
 //-----------------------------------------------------------------------------
 /*:
- * @plugindesc (v.1.1) A plugin that allows you to splash an image from an event.
+ * @plugindesc (v.1.2) A plugin that allows you to splash an image from an event.
  * 
  * @author Roxas
  *
@@ -24,23 +26,29 @@
  * @default img/pictures/
  *
  * @param defaultOpacity
- * @desc the default opacity of the splash images
+ * @desc the default opacity of the splash images (0-255)
  * Default: 220
  * @default 220
+ *
+ * @param defaultFileType
+ * @desc the default file type of the splash images
+ * Default: png
+ * @default png
  *
  * @help
  * Roxas Splash Image
  *
  * Description
- * A little and easy to use plugin for RPG Maker MV. 
- * It allows you to splash an image on the screen. 
- * It can be useful to show a letter, a plan or something else to the player.
+ * An easy to use plugin for RPG Maker MV, which allows you to splash an image on screen.
+ * It can be quite useful if you want to show something (letters, maps, ...) to the player in addition to the boring text boxes that every game has.
+ * Just be creative.
  *
  * Parameters
- * folder         = the folder in which the images are located
- * defaultOpacity = the default opacity of the splash images
+ * folder          = the folder in which the images are located
+ * defaultOpacity  = the default opacity used to show the images
+ * defaultFileType = the default file type of the splash images
  *
- * How to use
+ * How To Use
  * Generally you have to make a script call in an event.
  * There are two ways to do this.
  * 
@@ -53,6 +61,7 @@
  * Examples
  * showSplashImage("image1");
  * showSplashImage("image2", 240);
+ * ("image1" and "image2" are default file types)
  *
  * Recommended size for a big letter image
  * 350x550
@@ -72,10 +81,13 @@
 //-----------------------------------------------------------------------------
 var SplashImage_folder;
 var SplashImage_defaultOpacity;
+var SplashImage_defaultFileType;
 (function(){
     SplashImage_folder = PluginManager.parameters('Roxas_SplashImage')["folder"];
     if (SplashImage_folder !== "") SplashImage_folder = "img/pictures/";
     SplashImage_defaultOpacity = Number(PluginManager.parameters('Roxas_SplashImage')["defaultOpacity"]) || 220;
+	SplashImage_defaultFileType = PluginManager.parameters('Roxas_SplashImage')["defaultFileType"];
+	if (SplashImage_defaultFileType !== "") SplashImage_defaultFileType = "png";
 })();
 
 
@@ -126,8 +138,14 @@ Scene_SplashImage.prototype.createBackground = function() {
 }
 
 Scene_SplashImage.prototype.createSplashImage = function() {
-    var bitmap = Bitmap.load(SplashImage_folder + SplashImage_requestedImageName + ".png");
-    Scene_SplashImage_Sprite = new Sprite(bitmap);
+    var bitmap = null;
+	if (SplashImage_requestedImageName.search("\\.") == -1) {
+		bitmap = Bitmap.load(SplashImage_folder + SplashImage_requestedImageName + "." + SplashImage_defaultFileType);
+	}
+	else {
+		bitmap = Bitmap.load(SplashImage_folder + SplashImage_requestedImageName);
+	}
+	Scene_SplashImage_Sprite = new Sprite(bitmap);
     bitmap.addLoadListener(this.addSprite);
 }
 
