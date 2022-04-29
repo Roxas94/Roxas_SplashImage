@@ -1,32 +1,33 @@
-# Roxas_SplashImage
+# SplashImage
 
-###Introduction
-A little and easy to use plugin for RPG Maker MV.
-It allows you to splash an image on the screen.
-It is useful if you want to show a letter, a log, a map or something else to the player.
-So it should be possible to tell stories without a single character or to improve your story with some optional/additional information.
+### Introduction
+An easy to use **plugin** for **RPG Maker MV**, which allows you to splash an image on screen.
+It can be quite useful if you want to show something (letters, maps, ...) in addition to the boring text boxes that every game has.
 
-###Screenshot
+Just be creative.
+
+### Screenshot
 Here is an example of how I used the plugin to show an old log of a scientist to the player.
-![Alt text](/Roxas_SplashImage_Screenshot_Log.PNG?raw=true "Image could not be loaded")
 
-###How to install
+![Example Image](/Roxas_SplashImage_Screenshot_Log.PNG?raw=true)
+
+### How To Install
 - Download the plugin "Roxas_SplashImage.js"
 - Copy the file to js\plugins\ (inside your project folder)
 - Now you can find and activate it in your RPG Maker MV project.
 
-###How to use
+### How to use
 To use it, you have to make an event and make a script call.
 There are two ways to do this:
 - showSplashImage("nameOfTheImageYouWantToOpen");
 - showSplashImage("nameOfTheImageYouWantToOpen", opacityValue);
 
 The first call will show you the image with the default opacity, configured in the plugin options.
-The second call will show you the image with a spacific opacity value. (opacity can be 0-255)
+The second call will show you the image with a specific opacity value. (opacity can be 0-255)
 
-###Dependencies
+### Dependencies
 None.
 
-###Licence
+### Licence
 Free for any game.
-But it would be nice if you credit me in your game. :D
+But it would be nice if you credit me in your game. 😀
