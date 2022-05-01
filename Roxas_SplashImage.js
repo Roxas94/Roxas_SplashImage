@@ -55,8 +55,8 @@ var SplashImage_imageOpacity;
 	//-----------------------------------------------------------------------------
 
 	let plugin_pars = PluginManager.parameters('Roxas_SplashImage');
-    let SplashImage_folder = plugin_pars["folder"];
-    let SplashImage_defaultOpacity = Number(plugin_pars["defaultOpacity"]) || 220;
+	let SplashImage_folder = plugin_pars["folder"];
+	let SplashImage_defaultOpacity = Number(plugin_pars["defaultOpacity"]) || 220;
 
 	//-----------------------------------------------------------------------------
 	// DEFINE SCENE CLASS Scene_SplashImage
