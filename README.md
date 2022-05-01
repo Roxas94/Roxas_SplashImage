@@ -8,7 +8,7 @@ Just be creative.
 ### Screenshot
 Here is an example of how I used the plugin to show an old log of a scientist to the player.
 
-![Example Image](/Roxas_SplashImage_Screenshot_Log.PNG)
+![Example Image](/img/SplashImage_Screenshot.png)
 
 ### How To Install
 1. **Download** the plugin *"Roxas_SplashImage.js"*

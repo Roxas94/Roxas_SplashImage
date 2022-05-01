@@ -2,7 +2,7 @@
 //  Splash Image
 //-----------------------------------------------------------------------------
 //  For: RPGMAKER MV
-//  Roxas_SplashImage.js
+//  SplashImage.js
 //-----------------------------------------------------------------------------
 //  2016-12-30 - Version 1.0 - release
 //  2016-12-31 - Version 1.1 - bug fixed in showSplashImage(imageName, opacity)
@@ -54,7 +54,7 @@ var SplashImage_imageOpacity;
 	// READ PLUGIN PARAMETERS
 	//-----------------------------------------------------------------------------
 
-	let plugin_pars = PluginManager.parameters('Roxas_SplashImage');
+	let plugin_pars = PluginManager.parameters('SplashImage');
 	let SplashImage_folder = plugin_pars["folder"];
 	let SplashImage_defaultOpacity = Number(plugin_pars["defaultOpacity"]) || 220;
 
