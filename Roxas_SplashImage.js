@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//  Roxas Splash Image
+//  Splash Image
 //-----------------------------------------------------------------------------
 //  For: RPGMAKER MV
 //  Roxas_SplashImage.js
@@ -8,15 +8,15 @@
 //  2016-12-31 - Version 1.1 - bug fixed in showSplashImage(imageName, opacity)
 //  2022-04-29 - Version 1.2 - update plugin description
 //                             add defaultFileType plugin parameter
+//  2022-05-01 - Version 1.3 - clear code and remove defaultFileType so
+//                             loadlistener of bitmap can be replaced by direct
+//                             imangemanager call, which only supports png file
 //-----------------------------------------------------------------------------
 // TODO Fade In / Out effect
-// TODO Create a "namespace" to prevent collision with other global stuff
 //-----------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------
 /*:
- * @plugindesc (v.1.2) A plugin that allows you to splash an image from an event.
+ * @plugindesc Splash an image by using an event script call. (v1.3)
  * 
  * @author Roxas
  *
@@ -30,168 +30,180 @@
  * Default: 220
  * @default 220
  *
- * @param defaultFileType
- * @desc the default file type of the splash images
- * Default: png
- * @default png
- *
  * @help
- * Roxas Splash Image
+ * Splash an image (png) on screen by using a script call in an event.
  *
- * Description
- * An easy to use plugin for RPG Maker MV, which allows you to splash an image on screen.
- * It can be quite useful if you want to show something (letters, maps, ...) to the player in addition to the boring text boxes that every game has.
- * Just be creative.
- *
- * Parameters
- * folder          = the folder in which the images are located
- * defaultOpacity  = the default opacity used to show the images
- * defaultFileType = the default file type of the splash images
- *
- * How To Use
- * Generally you have to make a script call in an event.
- * There are two ways to do this.
+ * Syntax
+ * showSplashImage(<image>);
+ * showSplashImage(<image>, <opacity>);
  * 
- * First
- * showSplashImage("imageName");
- * 
- * Second
- * showSplashImage("imageName", opacity);
- *
  * Examples
- * showSplashImage("image1");
- * showSplashImage("image2", 240);
- * ("image1" and "image2" are default file types)
+ * showSplashImage("image1");       // use default opacity
+ * showSplashImage("image2", 240);  // explicitly use opacity of 240
  *
- * Recommended size for a big letter image
- * 350x550
- *
- * Recommended size for a medium sized map image
- * 500x300
- *
- * Try it out and have fun!
- *
+ * Recommended size for a
+ * - big letter image: 350x550
+ * - medium sized map: 500x300
  */
-//-----------------------------------------------------------------------------
 
+var SplashImage_imageName;
+var SplashImage_imageOpacity;
 
-
-
-// READ PARAMETERS
-//-----------------------------------------------------------------------------
-var SplashImage_folder;
-var SplashImage_defaultOpacity;
-var SplashImage_defaultFileType;
 (function(){
-    SplashImage_folder = PluginManager.parameters('Roxas_SplashImage')["folder"];
-    if (SplashImage_folder !== "") SplashImage_folder = "img/pictures/";
-    SplashImage_defaultOpacity = Number(PluginManager.parameters('Roxas_SplashImage')["defaultOpacity"]) || 220;
-	SplashImage_defaultFileType = PluginManager.parameters('Roxas_SplashImage')["defaultFileType"];
-	if (SplashImage_defaultFileType !== "") SplashImage_defaultFileType = "png";
+	//-----------------------------------------------------------------------------
+	// READ PLUGIN PARAMETERS
+	//-----------------------------------------------------------------------------
+
+	let plugin_pars = PluginManager.parameters('Roxas_SplashImage');
+    let SplashImage_folder = plugin_pars["folder"];
+    let SplashImage_defaultOpacity = Number(plugin_pars["defaultOpacity"]) || 220;
+
+	//-----------------------------------------------------------------------------
+	// DEFINE SCENE CLASS Scene_SplashImage
+	//-----------------------------------------------------------------------------
+
+	Scene_SplashImage.prototype = Object.create(Scene_MenuBase.prototype);
+	Scene_SplashImage.prototype.constructor = Scene_SplashImage;
+
+	/**
+	 * Create an instance of Scene_SplashImage.
+	 * 
+	 * @instance
+	 */
+	Scene_SplashImage.prototype.initialize = function() {
+		Scene_MenuBase.prototype.initialize.call(this);
+		this._imgName = SplashImage_imageName;
+		this._imgOpacity = SplashImage_imageOpacity;
+		this._imgSprite = null;
+		this._backgroundSprite = null;
+	};
+
+	/**
+	 * Create the components and add them to the rendering process.
+	 * 
+	 * @method create
+	 * @instance
+	 */
+	Scene_SplashImage.prototype.create = function() {
+		Scene_MenuBase.prototype.create.call(this);
+
+		this._backgroundSprite = new Sprite();
+		this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
+		this.addChild(this._backgroundSprite);
+
+		this._bitmap = ImageManager.loadBitmap(SplashImage_folder, this._imgName, 0, false);
+		this._imgSprite = new Sprite(this._bitmap);
+		this.addChild(this._imgSprite);
+
+		this._commandWindow = new Window_MenuCommand(0, 0);
+		this._commandWindow.playOkSound = this.doNothing;
+		this._commandWindow.setHandler('ok', this.free); // left mouse button, touchscreen press
+		this._commandWindow.setHandler('cancel', this.free); // right mouse button
+		this.addWindow(this._commandWindow);
+	}
+
+	Scene_SplashImage.prototype.terminate = function() {
+		Scene_MenuBase.prototype.terminate.call(this);
+		this.removeChild(this._backgroundSprite);
+		this.removeChild(this._imgSprite);
+		this._commandWindow.close();
+	};
+
+	/**
+	 * Start the scene processing.
+	 * 
+	 * @method start
+	 * @instance
+	 */
+	Scene_SplashImage.prototype.start = function() {
+		Scene_MenuBase.prototype.start.call(this);
+		this._imgSprite.opacity = this._imgOpacity == null ? SplashImage_defaultOpacity : this._imgOpacity;
+		this._imgSprite.opacity = this._imgSprite.opacity > 255 ? 255 : this._imgSprite.opacity;
+		this._imgSprite.opacity = this._imgSprite.opacity < 0 ? 0 : this._imgSprite.opacity;
+		this._imgSprite.x = Graphics.width / 2 - this._imgSprite.width / 2;
+		this._imgSprite.y = Graphics.height / 2 - this._imgSprite.height / 2;
+	}
+
+	/**
+	 * Update the scene processing each new frame.
+	 * 
+	 * @method update
+	 * @instance
+	 */
+	Scene_SplashImage.prototype.update = function() {
+		Scene_MenuBase.prototype.update.call(this);
+		this.handleUserInput();
+	}
+
+	/**
+	* Return whether the scene is busy or not.
+	* 
+	* @method isBusy
+	* @instance
+	* @return {Boolean} Return true if the scene is currently busy
+	*/
+	Scene_SplashImage.prototype.isBusy = function() {
+		return this._commandWindow.isClosing() || Scene_MenuBase.prototype.isBusy.call(this);
+	};
+
+	/**
+	 * Handles left mouse button and touchscreen press events.
+	 * 
+	 * @method handleUserInput
+	 * @instance
+	 * @memberof Scene_SplashImage
+	 */
+	Scene_SplashImage.prototype.handleUserInput = function() {
+		if (TouchInput.isTriggered()) {
+			this.free();
+		}
+	}
+
+	/**
+	 * Frees the scene.
+	 * 
+	 * @method free
+	 * @instance
+	 * @memberof Scene_SplashImage
+	 */
+	Scene_SplashImage.prototype.free = function() {
+		if (this._commandWindow != null) this._commandWindow.close();
+		SceneManager.pop();
+	}
+
+	/**
+	 * Does nothing, can be used to override handlers.
+	 * 
+	 * @method doNothing
+	 * @instance
+	 * @memberof Scene_SplashImage
+	 */
+	Scene_SplashImage.prototype.doNothing = function () { }
 })();
 
-
-
-
-// DEFINE SCRIPT CALL VARIABLES
-//-----------------------------------------------------------------------------
-var SplashImage_requestedImageName;
-var SplashImage_requestedOpacity;
-
-
-
-
-// DEFINE SCENE CLASS Scene_SplashImage
-//-----------------------------------------------------------------------------
-/*
- * Initializing stuff
+/**
+ * The scene class for the "splash image".
+ * 
+ * @class Scene_SplashImage
+ * @constructor 
+ * @extends Scene_MenuBase
  */
-var instance = this;
-var Scene_SplashImage_Sprite;
 function Scene_SplashImage() {
-    this.initialize.apply(this, arguments);
-    instance = this;
-}
-Scene_SplashImage.prototype = Object.create(Scene_MenuBase.prototype);
-Scene_SplashImage.prototype.constructor = Scene_SplashImage;
-Scene_SplashImage.prototype.initialize = function() {
-    Scene_MenuBase.prototype.initialize.call(this);
-};
-
-Scene_SplashImage.prototype.doNothing = function () {
+	this.initialize.apply(this, arguments);
 }
 
-/*
- * Method stuff
- */
-Scene_SplashImage.prototype.create = function() {
-    Scene_MenuBase.prototype.create.call(this);
-    this.createBackground();
-    this.createSplashImage();
-    this.handleUserInput();
-}
-
-Scene_SplashImage.prototype.createBackground = function() {
-    this._backgroundSprite = new Sprite();
-    this._backgroundSprite.bitmap = SceneManager.backgroundBitmap();
-    this.addChild(this._backgroundSprite);
-}
-
-Scene_SplashImage.prototype.createSplashImage = function() {
-    var bitmap = null;
-	if (SplashImage_requestedImageName.search("\\.") == -1) {
-		bitmap = Bitmap.load(SplashImage_folder + SplashImage_requestedImageName + "." + SplashImage_defaultFileType);
-	}
-	else {
-		bitmap = Bitmap.load(SplashImage_folder + SplashImage_requestedImageName);
-	}
-	Scene_SplashImage_Sprite = new Sprite(bitmap);
-    bitmap.addLoadListener(this.addSprite);
-}
-
-Scene_SplashImage.prototype.addSprite = function() {
-    Scene_SplashImage_Sprite.opacity = SplashImage_requestedOpacity == null ? SplashImage_defaultOpacity : SplashImage_requestedOpacity;
-    Scene_SplashImage_Sprite.x = Graphics.width / 2 - Scene_SplashImage_Sprite.width / 2;
-    Scene_SplashImage_Sprite.y = Graphics.height / 2 - Scene_SplashImage_Sprite.height / 2;
-    instance.addChild(Scene_SplashImage_Sprite);
-}
-
-Scene_SplashImage.prototype.handleUserInput = function() {
-    this._commandWindow = new Window_MenuCommand(0, 0);
-    this._commandWindow.playOkSound = this.doNothing;
-    this._commandWindow.setHandler('ok', this.free);
-    this._commandWindow.setHandler('cancel', this.free);
-    this.addWindow(this._commandWindow);
-}
-
-Scene_SplashImage.prototype.handleUserTouchInput = function() {
-    if (TouchInput.isTriggered()) {
-        this.free();
-    }
-}
-
-Scene_SplashImage.prototype.free = function() {
-    instance._commandWindow.close();
-    instance.popScene();
-}
-
-Scene_SplashImage.prototype.update = function() {
-    Scene_MenuBase.prototype.update.call(this);
-    this.handleUserTouchInput();
-}
-
-
-
-
-// DEFINE FUNCTION FOR RPG MAKER CALL
 //-----------------------------------------------------------------------------
+// API FUNCTIONS FOR RPG MAKER CALLS
+//-----------------------------------------------------------------------------
+
 function showSplashImage(imageName) {
-    SplashImage_requestedImageName = imageName;
-    SplashImage_requestedOpacity = null;
-    SceneManager.push(Scene_SplashImage);
+	SplashImage_imageName = imageName;
+	SplashImage_imageOpacity = null;
+	SceneManager.push(Scene_SplashImage);
 }
+
 function showSplashImage(imageName, opacity) {
-    SplashImage_requestedImageName = imageName;
-    SplashImage_requestedOpacity = opacity;
-    SceneManager.push(Scene_SplashImage);
+	SplashImage_imageName = imageName;
+	SplashImage_imageOpacity = opacity;
+	SceneManager.push(Scene_SplashImage);
 }
