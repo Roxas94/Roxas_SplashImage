@@ -11,7 +11,7 @@ Here is an example of how I used the plugin to show an old log of a scientist to
 ![Example Image](/img/SplashImage_Screenshot.png)
 
 ### How To Install
-1. **Download** the plugin *"Roxas_SplashImage.js"*
+1. **Download** the plugin *"SplashImage.js"*
 2. **Copy** the plugin to *"js\plugins\"* (inside your project folder)
 3. Now you can find and **activate it in your RPG Maker MV project**.
 
